@@ -1,4 +1,4 @@
-﻿"""Resumen ordenado de manuales: API opcional + fallback heurístico."""
+"""Resumen ordenado de manuales: API opcional + fallback heurístico."""
 
 from __future__ import annotations
 
@@ -9,13 +9,52 @@ from dataclasses import dataclass
 from .corrector import correct_text
 
 SECTIONS = (
-    ("Identificación", ("marca", "modelo", "capacidad", "kg", "tipo", "dimensiones", "peso", "referencia", "serie")),
-    ("Conexión", ("conexión", "conectar", "agua", "desagüe", "desague", "electric", "voltaje", "enchufe", "toma", "manguera", "instalación", "instalacion")),
-    ("Programas", ("programa", "ciclo", "algodón", "algodon", "sintético", "sintetico", "delicado", "rápido", "rapido", "centrifug", "temperatura", "rpm", "duración", "duracion")),
-    ("Uso diario", ("uso", "cargar", "carga", "detergente", "suavizante", "bloquear", "bloqueo", "puerta", "tambor", "inicio", "pausa", "panel")),
-    ("Mantenimiento", ("mantenimiento", "limpiar", "limpieza", "filtro", "junta", "cubeta", "cajetín", "cajetin", "descalcif", "cuidado")),
-    ("Averías", ("error", "avería", "averia", "código", "codigo", "falla", "problema", "alarma", "e0", "e1", "e2", "e3", "e4", "solución", "solucion")),
-    ("Advertencias", ("advertencia", "peligro", "riesgo", "precaución", "precaucion", "no tocar", "prohibido", "importante", "atención", "atencion", "seguridad")),
+    (
+        "Identificación",
+        ("marca", "modelo", "capacidad", "kg", "tipo", "dimensiones", "peso", "referencia", "serie"),
+    ),
+    (
+        "Conexión",
+        (
+            "conexión", "conectar", "agua", "desagüe", "desague", "electric", "voltaje",
+            "enchufe", "toma", "manguera", "instalación", "instalacion",
+        ),
+    ),
+    (
+        "Programas",
+        (
+            "programa", "ciclo", "algodón", "algodon", "sintético", "sintetico", "delicado",
+            "rápido", "rapido", "centrifug", "temperatura", "rpm", "duración", "duracion",
+        ),
+    ),
+    (
+        "Uso diario",
+        (
+            "uso", "cargar", "carga", "detergente", "suavizante", "bloquear", "bloqueo",
+            "puerta", "tambor", "inicio", "pausa", "panel",
+        ),
+    ),
+    (
+        "Mantenimiento",
+        (
+            "mantenimiento", "limpiar", "limpieza", "filtro", "junta", "cubeta",
+            "cajetín", "cajetin", "descalcif", "cuidado",
+        ),
+    ),
+    (
+        "Averías",
+        (
+            "error", "avería", "averia", "código", "codigo", "falla", "problema", "alarma",
+            "e0", "e1", "e2", "e3", "e4", "solución", "solucion",
+        ),
+    ),
+    (
+        "Advertencias",
+        (
+            "advertencia", "peligro", "riesgo", "precaución", "precaucion", "no tocar",
+            "prohibido", "importante", "atención", "atencion", "seguridad",
+        ),
+    ),
 )
 
 SECTION_ORDER = [name for name, _ in SECTIONS]
@@ -147,7 +186,6 @@ def _local_summary(text: str) -> str:
         if len(buckets[section]) < 12:
             buckets[section].append(f"- {line}")
 
-    # Si hay poco contenido clasificado, añade frases densas a Identificación/Uso
     classified = sum(len(v) for v in buckets.values())
     if classified < 6:
         dense = _dense_sentences(text, limit=10)
@@ -186,7 +224,7 @@ def _normalize_lines(text: str) -> list[str]:
     raw = text.replace("\r\n", "\n").replace("\r", "\n")
     lines: list[str] = []
     for line in raw.split("\n"):
-        cleaned = re.sub(r"\s+", " ", line).strip(" •*-–—\t ")
+        cleaned = re.sub(r"\s+", " ", line).strip(" \u2022*-\u2013\u2014\t ")
         if len(cleaned) < 12:
             continue
         if re.fullmatch(r"[\d.\-/]+", cleaned):

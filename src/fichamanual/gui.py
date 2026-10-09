@@ -1,4 +1,4 @@
-﻿"""Interfaz de escritorio de FichaManual."""
+"""Interfaz de escritorio de FichaManual."""
 
 from __future__ import annotations
 
@@ -54,7 +54,7 @@ class FichaManualApp(ttk.Frame):
         toolbar = ttk.Frame(self)
         toolbar.pack(fill=tk.X, pady=(0, 8))
 
-        ttk.Button(toolbar, text="Abrir archivo…", command=self.open_file).pack(
+        ttk.Button(toolbar, text="Abrir archivo...", command=self.open_file).pack(
             side=tk.LEFT
         )
         ttk.Button(toolbar, text="Pegar portapapeles", command=self.paste_clipboard).pack(
@@ -78,7 +78,7 @@ class FichaManualApp(ttk.Frame):
         ttk.Button(toolbar, text="Copiar ficha", command=self.copy_output).pack(
             side=tk.RIGHT, padx=(0, 6)
         )
-        ttk.Button(toolbar, text="Guardar ficha…", command=self.save_output).pack(
+        ttk.Button(toolbar, text="Guardar ficha...", command=self.save_output).pack(
             side=tk.RIGHT, padx=(0, 6)
         )
 
@@ -114,8 +114,7 @@ class FichaManualApp(ttk.Frame):
 
     def _set_busy(self, busy: bool) -> None:
         self._busy = busy
-        state = tk.DISABLED if busy else tk.NORMAL
-        self.btn_summarize.configure(state=state)
+        self.btn_summarize.configure(state=(tk.DISABLED if busy else tk.NORMAL))
 
     def open_file(self) -> None:
         path = filedialog.askopenfilename(
@@ -185,7 +184,7 @@ class FichaManualApp(ttk.Frame):
             messagebox.showinfo(APP_TITLE, "Pega o abre un manual primero.")
             return
         self._set_busy(True)
-        self._set_status("Generando ficha…")
+        self._set_status("Generando ficha...")
         use_api = bool(self.use_api.get())
 
         def worker() -> None:
@@ -194,7 +193,8 @@ class FichaManualApp(ttk.Frame):
                 fixed = correct_text(result.text)
                 self.master.after(0, lambda: self._on_success(fixed, result.engine))
             except Exception as exc:
-                self.master.after(0, lambda: self._on_error(str(exc)))
+                msg = str(exc)
+                self.master.after(0, lambda m=msg: self._on_error(m))
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -229,7 +229,7 @@ def run_app() -> None:
         try:
             img = tk.PhotoImage(file=str(icon_png))
             root.iconphoto(True, img)
-            root._icon_img = img  # noqa: SLF001 — evitar GC
+            root._icon_img = img
         except tk.TclError:
             pass
 
