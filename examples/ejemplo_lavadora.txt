@@ -1,0 +1,52 @@
+﻿Manual de usuario — Lavadora EcoWash X200
+========================================
+
+Marca: EcoWash
+Modelo: X200
+Capacidad: 8 kg
+Tipo: carga frontal
+Dimensiones: 85 x 60 x 55 cm
+Alimentación: 220-240 V / 50 Hz
+
+Instalación y conexión
+----------------------
+Conecte la manguera de agua fría a la toma de 3/4".
+El desagüe debe quedar entre 60 y 100 cm de altura.
+Deje al menos 5 cm a cada lado para ventilación.
+No use alargadores eléctricos.
+
+Programas principales
+---------------------
+Algodón 40 °C — ropa blanca y de color resistente, 2 h 10 min, 1200 rpm.
+Sintéticos 30 °C — tejidos mixtos, 1 h 20 min, 1000 rpm.
+Delicado — lana y prendas finas, 55 min, 600 rpm.
+Rápido 15 — ropa poco sucia, 15 minutos.
+Centrifugado — solo centrifugado a 1200 rpm.
+
+Uso diario
+----------
+Abra la puerta y cargue la ropa sin superar la capacidad.
+Añada detergente y suavizante en el cajetín.
+Seleccione el programa y pulse Inicio.
+El bloqueo infantil se activa manteniendo el botón 3 segundos.
+
+Mantenimiento
+-------------
+Limpie el filtro de la bomba cada mes.
+Retire residuos del cajetín de detergente.
+Deje la puerta entreabierta tras cada lavado.
+Limpie la junta de goma con un paño húmedo.
+
+Averías frecuentes
+------------------
+E1 — puerta mal cerrada. Compruebe el cierre.
+E2 — falta de agua. Revise el grifo y la manguera.
+E3 — desagüe obstruido. Limpie el filtro.
+E4 — desequilibrio de carga. Redistribuya la ropa.
+
+Advertencias de seguridad
+-------------------------
+No lave alfombras ni prendas impermeables.
+Desconecte la corriente antes de cualquier limpieza.
+No apoye objetos calientes sobre la tapa.
+Mantenga a los niños alejados durante el funcionamiento.
