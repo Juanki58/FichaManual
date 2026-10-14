@@ -8,17 +8,47 @@ Repositorio: https://github.com/Juanki58/FichaManual
 
 ---
 
+## Descargar
+
+| Enlace | Uso |
+|--------|-----|
+| **[Página de descarga](https://juanki58.github.io/FichaManual/)** | Ideal para enviar al cliente |
+| **[ZIP Windows (directo)](https://github.com/Juanki58/FichaManual/releases/latest/download/FichaManual-Setup.zip)** | Descarga estable del último Release |
+| **[Releases en GitHub](https://github.com/Juanki58/FichaManual/releases)** | Historial de versiones |
+
+**Android:** aún no hay APK publicada; solo Windows por ahora. Detalle: **[ANDROID.md](ANDROID.md)**.
+
+### Activar GitHub Pages (si la web aún no carga)
+
+1. En el repo: **Settings → Pages**.
+2. **Source:** Deploy from a branch.
+3. Branch: `master` (o `main`), carpeta `/docs` → **Save**.
+4. En 1–2 minutos estará en: https://juanki58.github.io/FichaManual/
+
+La página vive en `docs/index.html`.
+
+---
+
 ## Para usuarios finales (sin Python)
 
-1. Recibe la carpeta `FichaManual-Setup` o el ZIP `FichaManual-Setup.zip`.
-2. Si viene en ZIP, descomprímelo.
+Instrucciones ultra simples: ver **[PARA_EL_CLIENTE.md](PARA_EL_CLIENTE.md)**.
+
+1. Descarga `FichaManual-Setup.zip` (enlace de arriba) o recibe el ZIP.
+2. Descomprímelo.
 3. Ejecuta **`FichaManual-Setup.bat`**.
 4. La app se instala en `%LOCALAPPDATA%\FichaManual`, crea un acceso directo en el **Escritorio** y en el **Menú Inicio**.
-5. Abre **FichaManual** desde el acceso directo.
+5. Abre **FichaManual** desde el acceso directo → pega texto → **Crear ficha**.
+
+Requisitos: Windows 10/11. No hace falta Python.
 
 Para desinstalar: Menú Inicio → FichaManual → Desinstalar FichaManual.
 
-> La primera versión usa un instalador PowerShell/BAT (sin Inno Setup). No requiere permisos de administrador.
+> Instalador PowerShell/BAT (sin Inno Setup). No requiere permisos de administrador.
+
+### Android
+
+La app móvil es un MVP aparte (carpeta `android/`). No va en el ZIP de Windows.  
+Detalle: **[ANDROID.md](ANDROID.md)**.
 
 ---
 
@@ -77,9 +107,12 @@ FichaManual/
   run.bat
   requirements.txt
   FichaManual.spec
+  PARA_EL_CLIENTE.md      # instrucciones simples para el cliente
+  ANDROID.md              # estado y build de la app Android
   assets/                 # icono .ico / .png
   src/fichamanual/        # extractor, summarizer, corrector, gui
-  scripts/                # icono, build exe, build instalador
+  android/                # MVP Android (Kotlin)
+  scripts/                # icono, build exe, build instalador, APK
   installer/              # Setup.bat + Install/Uninstall.ps1
   examples/               # manual de ejemplo
 ```
@@ -101,8 +134,11 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build_installer.ps1
 Resultado:
 
 - `dist\FichaManual\FichaManual.exe` — app empaquetada (PyInstaller)
-- `release\FichaManual-Setup\` — lo que envías a otro usuario
+- `release\FichaManual-Setup\` — **lo que envías a otro usuario** (incluye `app\FichaManual.exe`)
 - `release\FichaManual-Setup.zip` — mismo contenido comprimido
+- `installer\app\` — copia local del payload (generada por el build; no hace falta enviarla)
+
+En el PC destino: descomprimir el ZIP y ejecutar `FichaManual-Setup.bat`. El `.exe` debe estar en `app\` junto al Setup.
 
 El instalador usa el icono `assets\fichamanual.ico` en el `.exe` y en los accesos directos.
 

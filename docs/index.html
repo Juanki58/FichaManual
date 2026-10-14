@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FichaManual — Descargar</title>
+  <meta name="description" content="Descarga FichaManual para Windows: resume manuales largos en una ficha clara." />
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --ink: #1c1b19;
+      --muted: #5c574e;
+      --line: #d9d3c7;
+      --accent: #1f4d3a;
+      --accent-hover: #16382b;
+      --card: #fffcf7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, #e8efe9 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, #efe8dc 0%, transparent 50%),
+        var(--bg);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+    main {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 3rem 1.25rem 4rem;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.75rem;
+      color: var(--accent);
+    }
+    .lead {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin: 0 0 2rem;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1.5rem 1.4rem;
+      margin-bottom: 1.75rem;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 0.9rem 1.4rem;
+      border-radius: 8px;
+      transition: background 0.15s ease;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:focus-visible {
+      outline: 3px solid #7aa892;
+      outline-offset: 3px;
+    }
+    .meta {
+      margin: 0.85rem 0 0;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin: 0 0 0.75rem;
+    }
+    ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+    li { margin-bottom: 0.45rem; }
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.92em;
+      background: #efeae0;
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+    }
+    .note {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin: 0;
+    }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>FichaManual</h1>
+    <p class="lead">
+      Aplicación de escritorio para Windows que resume un manual largo (texto o PDF)
+      y deja los datos importantes ordenados en una ficha clara.
+    </p>
+
+    <section class="panel" aria-labelledby="descarga">
+      <h2 id="descarga">Descarga</h2>
+      <a class="btn" href="https://github.com/Juanki58/FichaManual/releases/latest/download/FichaManual-Setup.zip">
+        Descargar para Windows
+      </a>
+      <p class="meta">Windows 10/11 · ZIP ~28&nbsp;MB · No hace falta instalar Python</p>
+    </section>
+
+    <section class="panel" aria-labelledby="instalar">
+      <h2 id="instalar">Instalación (3 pasos)</h2>
+      <ol>
+        <li><strong>Descomprime</strong> el archivo <code>FichaManual-Setup.zip</code>.</li>
+        <li>Haz doble clic en <code>FichaManual-Setup.bat</code>.</li>
+        <li>Abre <strong>FichaManual</strong> desde el <strong>Escritorio</strong> (o el Menú Inicio).</li>
+      </ol>
+      <p class="note" style="margin-top:1rem">
+        Luego: pega el texto del manual o abre un <code>.txt</code> / <code>.pdf</code> y pulsa <strong>Crear ficha</strong>.
+      </p>
+    </section>
+
+    <section class="panel" aria-labelledby="android">
+      <h2 id="android">Android</h2>
+      <p class="note" style="margin:0">
+        Aún no hay APK pública. Por ahora la descarga disponible es solo para Windows.
+      </p>
+    </section>
+
+    <footer>
+      Código y actualizaciones:
+      <a href="https://github.com/Juanki58/FichaManual">github.com/Juanki58/FichaManual</a>
+      ·
+      <a href="https://github.com/Juanki58/FichaManual/releases">Releases</a>
+    </footer>
+  </main>
+</body>
+</html>
