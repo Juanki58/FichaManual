@@ -1,8 +1,8 @@
 ﻿# FichaManual
 
-**FichaManual** es una aplicación de escritorio para Windows que toma un manual largo (texto o PDF), lo resume y deja los datos importantes ordenados en una ficha clara.
+**FichaManual** es una aplicación de escritorio para Windows que convierte documentos extensos en síntesis breves, ordenadas y fáciles de revisar.
 
-Ideal para manuales de electrodomésticos u otros documentos técnicos: pegas el texto o abres el archivo y obtienes secciones como identificación, conexión, programas, uso, mantenimiento, averías y advertencias.
+Sirve para informes, dosieres, apuntes, procedimientos y manuales técnicos. La ficha genérica organiza ideas, datos, decisiones, acciones y riesgos cuando están expresamente presentes; los manuales de producto pueden generar además una ficha técnica específica.
 
 Repositorio: https://github.com/Juanki58/FichaManual
 
@@ -54,17 +54,19 @@ Detalle: **[ANDROID.md](ANDROID.md)**.
 
 ## Qué hace la app
 
-- Pegar texto o abrir `.txt` / `.pdf`
-- Generar una **ficha ordenada** con estas secciones:
-  - Identificación
-  - Conexión
-  - Programas
-  - Uso diario
-  - Mantenimiento
-  - Averías
-  - Advertencias
+- Pegar texto o abrir `.txt`, `.md`, `.docx` y `.pdf` (PDF con texto seleccionable)
+- Crear síntesis ejecutivas concisas con tema, resumen, ideas clave, datos, decisiones, acciones, riesgos y conclusiones cuando correspondan
+- Exportar en Word (`.docx`), texto (`.txt`) o Markdown (`.md`)
 - Corrección básica del texto de salida
 - Copiar o guardar la ficha
+
+### Privacidad y uso de API
+
+El motor local procesa el texto en el equipo. Si el usuario activa «Usar API», la app muestra un aviso y, al generar, envía el contenido a OpenAI API usando la clave configurada; ese uso puede generar costes asociados a dicha clave. No introduzcas información confidencial salvo que tengas autorización y la política de tu organización permita ese tratamiento.
+
+### Estado para empresas
+
+La versión actual sirve para evaluar el flujo de síntesis en un piloto. Todavía no incluye cuentas de equipo, administración central, registro de actividad, procesamiento por lotes ni OCR para PDF escaneados; no debe presentarse como una plataforma empresarial completa.
 
 ### Motor de resumen
 
