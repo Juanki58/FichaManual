@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fm_primary">#1B4F72</color>
+    <color name="fm_on_primary">#FFFFFF</color>
+    <color name="fm_surface">#F4F7FA</color>
+    <color name="fm_on_surface">#1A1A1A</color>
+</resources>
