@@ -5,6 +5,8 @@ __pycache__/
 build/
 dist/
 release/
+installer/app/
+installer/fichamanual.ico
 .env
 *.spec.bak
 Thumbs.db
