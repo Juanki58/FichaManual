@@ -1,0 +1,48 @@
+Clasificación de los sistemas
+=============================
+
+Artículo principal: Sistemas dinámicos
+
+{\displaystyle \lambda =\lim _{n\to \infty }{\frac {1}{n}}\sum _{i=0}^{n-1}\ln |f'(x_{i})|}
+
+Donde \lambda es el exponente de Lyapunov. Los sistemas se pueden ordenar según lo
+predecible que resulte su evolución temporal.
+
+Historia
+--------
+
+La teoría del caos es la rama de las matemáticas, la física y otras ciencias que
+trata ciertos tipos de sistemas dinámicos no lineales muy sensibles a las
+variaciones en las condiciones iniciales.[1][2] Pequeñas variaciones en dichas
+condiciones iniciales pueden implicar grandes diferencias en el comportamiento
+futuro, imposibilitando la predicción a largo plazo.[3]
+
+Edward Lorenz descubrió en 1963 que un modelo meteorológico simplificado era
+extremadamente sensible a las condiciones iniciales: el llamado efecto mariposa
+ilustra cómo una perturbación mínima puede conducir a trayectorias muy distintas.
+
+Sensibilidad a las condiciones iniciales
+----------------------------------------
+
+El caos determinista implica que, aunque las ecuaciones no contienen azar, el
+horizonte de predicción es limitado por la amplificación de errores de medida.
+Ese límite teórico de predicción no es un fallo operativo del modelo, sino una
+propiedad intrínseca del sistema.
+
+Límites de predicción
+--------------------
+
+Aunque el sistema es determinista, la predicción a largo plazo resulta
+prácticamente imposible. Más allá de un horizonte temporal, cualquier proyección
+deja de ser útil porque los errores crecen de forma exponencial.
+
+Véase también
+-------------
+Fractales
+Atractores extraños
+
+Referencias
+-----------
+[1] Lorenz, E. (1963).
+[2] Wikipedia contributors.
+[3] Strogatz, S. Nonlinear dynamics and chaos.
