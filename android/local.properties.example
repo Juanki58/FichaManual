@@ -1,0 +1,6 @@
+## Copia este archivo como local.properties y ajusta la ruta del SDK.
+## Android Studio lo genera automáticamente al abrir el proyecto.
+##
+## Ejemplo Windows:
+## sdk.dir=C:\\Users\\TU_USUARIO\\AppData\\Local\\Android\\Sdk
+sdk.dir=C:\\Users\\REPLACE\\AppData\\Local\\Android\\Sdk

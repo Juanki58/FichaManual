@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FichaManual</string>
+    <string name="subtitle">Pega un texto y genera una ficha resumida (MVP Android).</string>
+    <string name="input_hint">Pega aquí el texto…</string>
+    <string name="create_ficha">Crear ficha</string>
+    <string name="clear">Limpiar</string>
+    <string name="copy">Copiar</string>
+    <string name="output_label">Ficha</string>
+    <string name="empty_input">Pega un texto antes de crear la ficha.</string>
+    <string name="empty_output">No hay ficha para copiar.</string>
+    <string name="copied">Ficha copiada.</string>
+</resources>

@@ -9,3 +9,12 @@ release/
 *.spec.bak
 Thumbs.db
 .DS_Store
+
+# Android
+android/.gradle/
+android/local.properties
+android/**/build/
+android/.idea/
+android/*.iml
+android/captures/
+android/.cxx/
