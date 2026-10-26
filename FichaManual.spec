@@ -12,7 +12,7 @@ a = Analysis(
         (str(assets / "fichamanual.ico"), "assets"),
         (str(assets / "fichamanual.png"), "assets"),
     ],
-    hiddenimports=["pypdf", "openai"],
+    hiddenimports=["pypdf", "openai", "docx"],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

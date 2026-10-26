@@ -1,4 +1,4 @@
-﻿"""FichaManual — resume y ordena manuales largos en una ficha clara."""
+﻿"""FichaManual — resume y ordena textos / manuales en una ficha clara."""
 
 from __future__ import annotations
 
