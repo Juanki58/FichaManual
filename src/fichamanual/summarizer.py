@@ -98,7 +98,6 @@ SECTION_ORDER_PRODUCT = (
 )
 
 SECTION_ORDER_GENERIC = (
-    "Título / tema",
     "Resumen",
     "Ideas / conceptos clave",
     "Datos, cifras, fechas o definiciones",
@@ -109,60 +108,46 @@ SECTION_ORDER_GENERIC = (
     "Conclusiones o implicaciones",
 )
 
-_SYSTEM_PROMPT_GENERIC_CORE = """Eres un asistente que confecciona una SÍNTESIS clara y resumida de los
-hits más importantes de un texto (ensayos, dosieres, artículos, informes, apuntes, etc.)
-y los ordena en una ficha breve en español. NO es un resumen largo ni un volcado del texto.
-Extrae solo hechos e ideas del texto. No inventes.
+_SYSTEM_PROMPT_GENERIC_CORE = """Eres un asistente que confecciona una SÍNTESIS analítica en español.
+Reagrupa el texto en pocos bloques temáticos densos. NO copies párrafos ni una frase por oración.
+Extrae solo hechos que están en el texto. PROHIBIDO inventar cifras, porcentajes, leyes, nombres de planes o estadísticas que el texto no diga.
 
-Formato visual (texto plano, SIN Markdown):
-- NO uses # ni ## ni ** ni _ de Markdown.
-- Empieza sin título ruidoso (no escribas «Ficha del texto»).
-- Cada sección con esta línea exacta: ── Nombre de sección ──
-- Contenido en viñetas con «- ».
+Formato visual (texto plano, SIN Markdown, sin #, sin ** y sin viñetas «- »):
+1) Primera línea: un título corto SINTETIZADO del paradigma o tema. No copies el primer encabezado de sección ni una frase larga del cuerpo.
+2) Unos pocos bloques numerados (en medio, cerca de 4), cada uno con un nombre corto:
+1. Nombre breve
+Etiqueta: hecho comprimido en una sola línea
+Otra etiqueta: otro hecho
+3) Si el propio texto contrapone dos polos (siglo XX / siglo XXI, contracción / en contraposición, un sector frente a otro), ábrelos como subbloques cortos terminados en dos puntos. Si no hay contraste explícito, no lo inventes (no añadas Occidente/Sur, norte/sur ni bandos que el texto no nombre).
+4) Cierra, salvo en longitud corta, con:
+Matriz Resumen de Indicadores
+Dimensión | Factor clave | Indicador de control
+Una fila por bloque. El indicador es un hecho concreto del texto (mecanismo, actor, política, mineral, cifra SI aparece). Si no hay números, no inventes ninguno.
 
-Secciones posibles (en este orden; omite las vacías según las reglas y el nivel de longitud):
-── Título / tema ──
-── Resumen ──
-── Ideas / conceptos clave ──
-── Datos, cifras, fechas o definiciones ──
-── Decisiones ──
-── Acciones propuestas o pendientes ──
-── Riesgos y dudas ──
-── Estructura / apartados ──
-── Conclusiones o implicaciones ──
-
-Reglas de calidad (siempre):
-- Título / tema: UNA línea con el tema central del documento (p. ej. «Teoría del caos»), NO el primer encabezado de sección («Clasificación…», «Historia», «Véase también»).
-- Riesgos y dudas: SOLO riesgos operativos, bloqueos de proyecto o dudas de negocio expresamente mencionados. OMITE si no hay.
-- PROHIBIDO tratar como riesgo: límites teóricos, horizontes de predicción, sensibilidad a condiciones iniciales, propiedades matemáticas o conceptos académicos.
-- Estructura / apartados: solo apartados de contenido útiles (≥2). OMITE navegación web («Véase también», «Referencias», «Artículo principal», listas sueltas).
-- Elimina relleno, frases genéricas, citas largas y duplicados entre secciones. Nada de párrafos.
-- Elimina marcadores de cita [1], fórmulas, comandos LaTeX, residuos «Donde \\lambda es…» y ruido de Wikipedia.
-- Cada viñeta debe ser una frase COMPLETA y clara (≤ ~140 caracteres). Si no cabe sin cortar a mitad, OMÍTELA; no entregues frases truncadas ni con «…» a medias.
-- No inventes datos, decisiones, acciones ni conclusiones.
-- NUNCA uses campos de electrodoméstico (Marca, Modelo, Capacidad, rpm, Programas, etc.).
+Otras reglas:
+- PROHIBIDO el adorno «──» y la sección «Título / tema». El título es la primera línea, sola, sin viñeta y sin etiqueta.
+- El nombre de cada bloque va solo en su línea (por ejemplo «1. Inversión y capital» o «Resumen»), sin rayas a los lados.
+- Cada línea «Etiqueta: hecho» es densa: nombra el mecanismo y comprime el hecho. Nada de relleno.
+- Elimina LaTeX, citas [n], «Véase también», referencias y ruido de Wikipedia.
+- No uses campos de electrodoméstico (Marca, Modelo, Capacidad, rpm, Programas).
+- No trates un límite teórico o un concepto académico como riesgo operativo.
 """
 
 _LENGTH_PROMPT_GENERIC = {
     LENGTH_SHORT: """Nivel de longitud: CORTO.
-- Solo secciones: Título / tema + Resumen.
-- Resumen: 3 a 5 viñetas densas en TOTAL (toda la ficha). Una idea por línea.
-- OMITE Ideas, Datos, Decisiones, Acciones, Riesgos, Estructura y Conclusiones.
+- Título + 2 bloques como máximo.
+- Hasta 2 líneas «Etiqueta: hecho» por bloque.
+- Sin matriz.
 """,
-    LENGTH_MEDIUM: """Nivel de longitud: MEDIO (equilibrio).
-- Resumen: 3 a 4 viñetas densas.
-- Ideas / conceptos clave: hasta 5 hits; no repitas el Resumen; no uses encabezados sueltos como ideas.
-- Datos, cifras o definiciones: SOLO si aportan; omite si no hay.
-- Decisiones: hasta 3; solo si constan. Acciones: hasta 4. Conclusiones: 2 a 3 solo si el texto las indica.
-- Omite secciones vacías.
+    LENGTH_MEDIUM: """Nivel de longitud: MEDIO.
+- Título + hasta 4 bloques.
+- Hasta 4 líneas «Etiqueta: hecho» por bloque, más subbloques de contraste solo si el texto los sostiene.
+- Cierra con la Matriz Resumen de Indicadores (hasta 4 filas, una por bloque).
 """,
     LENGTH_LONG: """Nivel de longitud: DETALLADO.
-- Resumen: 4 a 6 viñetas densas (sigue siendo síntesis, no volcado).
-- Ideas / conceptos clave: hasta 8 hits útiles sin repetir el Resumen.
-- Datos, cifras o definiciones: hasta 8 si aportan.
-- Decisiones: hasta 5. Acciones: hasta 6. Conclusiones: hasta 5 si el texto las indica.
-- Estructura / apartados: más apartados útiles si aportan (≥2).
-- Sin relleno ni repeticiones; omite secciones vacías.
+- Título + hasta 4 bloques.
+- Hasta 5 líneas «Etiqueta: hecho» por bloque. Sigue siendo denso, no un volcado.
+- Una sola Matriz Resumen de Indicadores, hasta 4 filas.
 """,
 }
 
@@ -172,19 +157,19 @@ Extrae solo hechos del texto y ordénalos exactamente en estas secciones (incluy
 
 Formato visual (texto plano, SIN Markdown):
 - NO uses # ni ## ni ** ni _ de Markdown.
-- Empieza sin título ruidoso (no escribas «Ficha del producto»).
-- Cada sección con esta línea exacta: ── Nombre de sección ──
-- Contenido en viñetas con «- ».
+- PROHIBIDO el adorno «──» y la sección «Título / tema».
+- Si hay marca o modelo, la primera línea es solo el nombre del producto (por ejemplo «EcoWash X200»), sin viñeta y sin etiqueta.
+- Cada sección va sola en su línea, solo el nombre. Contenido en viñetas con «- ».
 
-Secciones (todas, en este orden):
-── Identificación ──
-── Especificaciones ──
-── Conexión / instalación ──
-── Programas ──
-── Uso diario ──
-── Mantenimiento ──
-── Códigos de error / averías ──
-── Advertencias importantes ──
+Secciones (en este orden; el nombre del producto, si existe, va antes):
+Identificación
+Especificaciones
+Conexión / instalación
+Programas
+Uso diario
+Mantenimiento
+Códigos de error / averías
+Advertencias importantes
 
 Formato obligatorio (viñetas densas, sin relleno):
 - Identificación: Marca, Modelo, Tipo, Referencia/Serie si aparecen.
@@ -259,29 +244,59 @@ _NOISE_FICHA_TITLES = re.compile(
 )
 
 
-def _plainify_ficha(text: str) -> str:
-    """Convierte cualquier encabezado Markdown (# / ##) a ── título ──.
+_TITLE_SECTION = re.compile(r"(?i)^t[ií]tulo\s*/\s*tema$")
+_RULE_HEADING = re.compile(r"^──\s*(.+?)\s*──$")
 
-    Red de seguridad: el motor local ya emite ──, pero la API o un exe/caché
-    antiguo pueden colar almohadillas.
+
+def _bare_heading(line: str) -> str | None:
+    """Nombre de sección sin # ni rayas. None si la línea no es un encabezado marcado."""
+    stripped = line.strip()
+    marked = _MD_HEADING_LINE.match(stripped)
+    if marked:
+        title = marked.group(2).strip().strip("#").strip()
+    else:
+        ruled = _RULE_HEADING.match(stripped)
+        if not ruled:
+            return None
+        title = ruled.group(1).strip()
+    title = re.sub(r"^──\s*", "", title)
+    title = re.sub(r"\s*──$", "", title).strip()
+    return title
+
+
+def _plainify_ficha(text: str) -> str:
+    """Deja los nombres de sección solos, sin # ni «──».
+
+    Si llega una sección «Título / tema», esa etiqueta desaparece y su viñeta
+    pasa a ser la primera línea de la ficha.
     """
     out: list[str] = []
+    lifted_title = ""
+    expect_title_bullet = False
     for raw in (text or "").splitlines():
         line = raw.rstrip()
-        m = _MD_HEADING_LINE.match(line.strip())
-        if m:
-            title = m.group(2).strip().strip("#").strip()
-            title = re.sub(r"^──\s*", "", title)
-            title = re.sub(r"\s*──$", "", title).strip()
-            if not title or _NOISE_FICHA_TITLES.match(title):
+        stripped = line.strip()
+        if re.match(r"^#{1,6}\s*$", stripped):
+            continue
+        heading = _bare_heading(stripped)
+        if heading is not None:
+            if not heading or _NOISE_FICHA_TITLES.match(heading):
                 continue
-            out.append(f"── {title} ──")
+            if _TITLE_SECTION.match(heading):
+                expect_title_bullet = True
+                continue
+            out.append(heading)
             continue
-        # Por si quedan '# ' sueltos al inicio de línea sin ser heading completo
-        if re.match(r"^#{1,6}\s*$", line.strip()):
+        if expect_title_bullet and stripped.startswith("- "):
+            lifted_title = stripped[2:].strip()
+            expect_title_bullet = False
             continue
+        expect_title_bullet = False
         out.append(line)
-    # Colapsar líneas en blanco excesivas
+    if lifted_title:
+        existing = next((row.strip() for row in out if row.strip()), "")
+        if existing != lifted_title:
+            out = [lifted_title, ""] + out
     joined = "\n".join(out)
     joined = re.sub(r"\n{3,}", "\n\n", joined).strip()
     return joined
@@ -517,22 +532,28 @@ def _try_api_summary(
         if len(partials) == 1:
             return partials[0]
 
-        merge_prompt = (
-            "Combina estas fichas parciales en UNA sola ficha final, "
-            "sin duplicar datos, usando exactamente las mismas secciones y reglas. "
-            f"Mantén la longitud {length_label}: elimina relleno, LaTeX, citas [n] "
-            "y viñetas repetidas. "
-            "El título debe ser el tema central, no un encabezado de sección. "
-            "Omite Riesgos si solo hay límites teóricos o conceptos académicos. "
-            "Cada viñeta debe ser una frase completa; si no cabe, omítela. "
-            "Omite secciones vacías. "
-            + (
-                f"Si un dato de producto no aparece en ninguna parcial, usa: {MISSING}\n\n"
-                if mode == "product"
-                else "\n"
+        if mode == "generic":
+            merge_prompt = (
+                "Combina estas fichas parciales en UNA sola ficha analítica, "
+                "sin duplicar ni inventar cifras, leyes ni estadísticas. "
+                "Formato: título sintetizado; bloques numerados con líneas «Etiqueta: hecho»; "
+                "subbloques de contraste solo si el texto los sostiene; "
+                "cierra con Matriz Resumen de Indicadores "
+                "(Dimensión | Factor clave | Indicador de control) solo con hechos presentes. "
+                f"Mantén la longitud {length_label}. "
+                "Omite LaTeX, citas [n] y ruido de Wikipedia.\n\n"
+                + "\n\n---\n\n".join(partials)
             )
-            + "\n\n---\n\n".join(partials)
-        )
+        else:
+            merge_prompt = (
+                "Combina estas fichas parciales en UNA sola ficha final, "
+                "sin duplicar datos, usando exactamente las mismas secciones y reglas. "
+                f"Mantén la longitud {length_label}: elimina relleno, LaTeX, citas [n] "
+                "y viñetas repetidas. "
+                "Cada viñeta debe ser una frase completa; si no cabe, omítela. "
+                f"Si un dato de producto no aparece en ninguna parcial, usa: {MISSING}\n\n"
+                + "\n\n---\n\n".join(partials)
+            )
         merged = client.chat.completions.create(
             model=model,
             temperature=0.2,
@@ -865,15 +886,41 @@ def _topic_from_definition(sentence: str) -> str | None:
     return None
 
 
+def _opening_title(lines: list[str]) -> str | None:
+    """Título del documento si está al principio, no un apartado interno."""
+    for line in lines[:6]:
+        if (
+            _GENERIC_HEADING.match(line)
+            or _SECTION_TITLE_NOISE.match(line)
+            or _is_web_residue(line)
+            or _is_math_noise(line)
+        ):
+            continue
+        if line.endswith(".") or len(line) > 90:
+            break
+        words = line.split()
+        if 2 <= len(words) <= 12 and (
+            _is_heading_candidate(line) or _is_heading_like_fragment(line)
+        ):
+            return line.strip().rstrip(".")
+        break
+    return None
+
+
 def _guess_title(lines: list[str], text: str) -> str:
     """Identifica el tema central, no el primer encabezado de sección."""
     sentences = _split_sentences(text)
+
+    opening = _opening_title(lines)
+    if opening:
+        return opening[:1].upper() + opening[1:]
 
     # 1) Definiciones explícitas en cualquier parte temprana del texto
     for sentence in sentences[:20]:
         topic = _topic_from_definition(sentence)
         if topic:
-            return topic
+            richer = _title_from_heading(topic, lines)
+            return richer or topic
 
     # 2) Frases con «teoría / concepto / principio de X» frecuentes
     topic_hits: dict[str, int] = {}
@@ -894,17 +941,23 @@ def _guess_title(lines: list[str], text: str) -> str:
         best = max(topic_hits.items(), key=lambda kv: (kv[1], len(kv[0])))[0]
         return best[:1].upper() + best[1:]
 
-    # 3) Primer encabezado que no sea ruido de sección / web
-    for line in lines[:12]:
+    # 3) Primer título real del documento, no un apartado genérico (Historia, Índice…)
+    for line in lines[:8]:
         lower = line.lower()
-        if _SECTION_TITLE_NOISE.match(line) or _is_web_residue(line):
+        if (
+            _SECTION_TITLE_NOISE.match(line)
+            or _GENERIC_HEADING.match(line)
+            or _is_web_residue(line)
+        ):
             continue
         if lower.startswith(("marca:", "modelo:", "capacidad:")):
             continue
         if re.search(r"[=_\-─—]{3,}", line):
             continue
-        if _is_heading_candidate(line) and not _is_heading_like_fragment(line):
-            # Preferir títulos con «teoría», «manual», etc.
+        words = line.split()
+        if 2 <= len(words) <= 12 and (
+            _is_heading_candidate(line) or _is_heading_like_fragment(line)
+        ):
             return line.strip().rstrip(".")
 
     # 4) Primera oración útil (completa, sin truncar)
@@ -918,6 +971,34 @@ def _guess_title(lines: list[str], text: str) -> str:
         if clause:
             return clause
     return "Texto sin título explícito"
+
+
+def _title_from_heading(topic: str, lines: list[str]) -> str | None:
+    """Si un título temprano precisa el tema («Escasez» → «La escasez en economía»), úsalo."""
+    tokens = [
+        tok
+        for tok in re.findall(r"[a-záéíóúñü]{4,}", topic.lower())
+        if tok not in _RANK_STOP
+    ]
+    if not tokens:
+        return None
+    for line in lines[:12]:
+        if (
+            _SECTION_TITLE_NOISE.match(line)
+            or _GENERIC_HEADING.match(line)
+            or _is_web_residue(line)
+            or _is_math_noise(line)
+        ):
+            continue
+        if not (_is_heading_candidate(line) or _is_heading_like_fragment(line)):
+            continue
+        low = line.lower()
+        if not all(tok in low for tok in tokens):
+            continue
+        if len(topic.split()) < len(line.split()) <= 12:
+            cleaned = line.strip().rstrip(".")
+            return cleaned[:1].upper() + cleaned[1:]
+    return None
 
 
 def _extract_section_headings(lines: list[str]) -> list[str]:
@@ -958,39 +1039,342 @@ def _extract_section_headings(lines: list[str]) -> list[str]:
     return headings
 
 
+# Palabras vacías: la comparación de frases usa el contenido, no la gramática.
+_RANK_STOP = frozenset(
+    {
+        "una", "uno", "unas", "unos", "para", "como", "pero", "más", "mas",
+        "sus", "este", "esta", "esto", "estos", "estas", "ese", "esa", "eso",
+        "esos", "esas", "muy", "también", "tambien", "entre", "cuando", "donde",
+        "desde", "hasta", "sobre", "tras", "porque", "aunque", "además", "ademas",
+        "hacia", "durante", "mediante", "según", "segun", "sin", "con", "por",
+        "del", "las", "los", "que", "qué", "cual", "cuales", "cada", "otro",
+        "otra", "otros", "otras", "mismo", "misma", "todo", "toda", "todos",
+        "todas", "hay", "son", "está", "estan", "están", "fue", "fueron", "ser",
+        "sido", "puede", "pueden", "debe", "deben", "así", "asi", "pues",
+        "the", "and", "for", "with", "that", "this", "from",
+    }
+)
+
+_GENERIC_HEADING = re.compile(
+    r"(?i)^(clasificaci[oó]n|historia|introducci[oó]n|definici[oó]n|"
+    r"etimolog[ií]a|notas?|anexos?|v[eé]ase\s+tambi[eé]n|referencias|"
+    r"bibliograf[ií]a|enlaces externos|contenido|sumario|índice|indice)\b"
+)
+
+
 def _score_key_sentence(s: str) -> float:
+    """Señales de forma (definición, cifra, cierre). No depende del tema."""
     lower = s.lower()
     score = 0.0
     if lower.startswith(("donde ", "esto es, donde ")):
         score -= 2.0
     if _is_web_residue(s) or _is_math_noise(s) or _is_heading_like_fragment(s):
         score -= 8.0
-    # Definiciones / conceptos
-    if any(
-        w in lower
-        for w in (
-            "se define", "consiste en", "significa", "es la", "es el",
-            "concepto", "teoría", "teoria", "principio", "ley de",
-            "implica", "por tanto", "por lo tanto", "escasez", "recursos",
-            "sensible", "condiciones iniciales", "predicción", "prediccion",
-            "efecto mariposa", "determinista",
-        )
+    if re.search(
+        r"(?i)\b(se define|consiste en|significa|es la|es el|es un|es una)\b",
+        s,
     ):
-        score += 2.0
+        score += 1.2
     if re.search(r"\d", s):
-        score += 1.0
-    if any(w in lower for w in _CONCLUSION_KW):
+        score += 0.6
+    if any(w in lower for w in _CONCLUSION_STRONG):
         score += 1.5
-    # Preferir longitud media
+    elif any(w in lower for w in _CONCLUSION_SOFT):
+        score += 0.4
     n = len(s)
-    if 40 <= n <= 220:
-        score += 1.0
-    elif n > 280:
+    if 40 <= n <= 240:
+        score += 0.8
+    elif n > 320:
         score -= 0.5
-    # Evitar ruido de índice
     if _TOC_NOISE.match(s):
         score -= 5.0
     return score
+
+
+def _content_token_list(text: str) -> list[str]:
+    return [
+        tok
+        for tok in re.findall(r"[a-záéíóúñü0-9]{3,}", text.lower())
+        if tok not in _RANK_STOP
+    ]
+
+
+def _content_tokens(text: str) -> set[str]:
+    return set(_content_token_list(text))
+
+
+def _too_similar(a: str, b: str) -> bool:
+    """True si dos frases dicen la misma idea, no solo si comparten el tema."""
+    if _overlap_ratio(a, b) >= 0.55:
+        return True
+    if _overlap_ratio(a, b) < 0.28:
+        return False
+    left = _content_token_list(a)
+    right = _content_token_list(b)
+    if len(left) < 3 or len(right) < 3:
+        return False
+    shared = set(zip(left, left[1:], left[2:])) & set(zip(right, right[1:], right[2:]))
+    return bool(shared)
+    return {
+        tok
+        for tok in re.findall(r"[a-záéíóúñü0-9]{3,}", text.lower())
+        if tok not in _RANK_STOP
+    }
+
+
+def _centrality(sentences: list[str]) -> list[float]:
+    """Importancia de cada frase dentro de este texto.
+
+    Sube si comparte contenido con otras frases y si usa términos que el
+    propio documento repite. No hay una lista de temas privilegiados.
+    """
+    n = len(sentences)
+    if n == 0:
+        return []
+    if n == 1:
+        return [1.0]
+
+    token_sets = [_content_tokens(s) for s in sentences]
+    sim = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        if not token_sets[i]:
+            continue
+        for j in range(i + 1, n):
+            if not token_sets[j]:
+                continue
+            inter = len(token_sets[i] & token_sets[j])
+            if inter == 0:
+                continue
+            score = inter / len(token_sets[i] | token_sets[j])
+            if score < 0.06:
+                continue
+            sim[i][j] = sim[j][i] = score
+
+    weight = [sum(row) for row in sim]
+    rank = [1.0 / n] * n
+    for _ in range(24):
+        nxt = [(1.0 - 0.85) / n] * n
+        for i in range(n):
+            incoming = 0.0
+            for j in range(n):
+                if sim[j][i] and weight[j]:
+                    incoming += rank[j] * sim[j][i] / weight[j]
+            nxt[i] += 0.85 * incoming
+        rank = nxt
+
+    df: dict[str, int] = {}
+    for toks in token_sets:
+        for tok in toks:
+            df[tok] = df.get(tok, 0) + 1
+    focus: list[float] = []
+    for toks in token_sets:
+        if not toks:
+            focus.append(0.0)
+            continue
+        focus.append(sum(df[tok] for tok in toks) / len(toks))
+
+    max_rank = max(rank) or 1.0
+    max_focus = max(focus) or 1.0
+    return [
+        0.62 * (rank[i] / max_rank) + 0.38 * (focus[i] / max_focus)
+        for i in range(n)
+    ]
+
+
+def _prepare_line(line: str) -> str:
+    cleaned = re.sub(r"\s+", " ", line).strip(" \u2022*-\u2013\u2014\t# ")
+    if len(cleaned) < 3:
+        return ""
+    if _is_math_noise(cleaned) or _is_web_residue(cleaned):
+        return ""
+    if re.fullmatch(r"[=_\-─—]{3,}", cleaned):
+        return ""
+    if _TOC_NOISE.match(cleaned) or re.fullmatch(r"[\d.\-/]+", cleaned):
+        return ""
+    if len(cleaned) > 800:
+        cleaned = cleaned[:800]
+    return cleaned
+
+
+def _sentences_in_chunk(chunk: str) -> list[str]:
+    chunk = re.sub(r"\s+", " ", chunk).strip()
+    if len(chunk) < 20:
+        return []
+    parts = re.split(r"(?<=[.!?…])\s+(?=[A-ZÁÉÍÓÚÑÜ¿¡\"'])", chunk)
+    return [part.strip() for part in parts if len(part.strip()) >= 20]
+
+
+def _is_section_heading(line: str) -> bool:
+    """Rótulo de apartado. Una frase cortada por el ancho de línea no cuenta."""
+    if line.endswith(".") or len(line) > 90 or len(line.split()) > 10:
+        return False
+    if re.search(r"(?i)\b(que|porque|cuando|donde|aunque)\b", line):
+        return False
+    # Solo verbos claros. El detector amplio confunde «Historia» o «economía».
+    if re.search(
+        r"(?i)\b(es|son|est[aá]n?|fue|fueron|tiene|tienen|puede|pueden|"
+        r"debe|deben|hay|era|eran|se\s+\w+)\b",
+        line,
+    ):
+        return False
+    return _is_heading_candidate(line) or _is_heading_like_fragment(line)
+
+
+def _iter_content_units(text: str) -> list[dict]:
+    """Frases útiles, uniendo líneas partidas y respetando los apartados."""
+    units: list[dict] = []
+    section = 0
+    heading = ""
+    lead = True
+    buffer: list[str] = []
+
+    def flush() -> None:
+        nonlocal lead
+        if not buffer:
+            return
+        chunk = " ".join(buffer)
+        buffer.clear()
+        for sentence in _sentences_in_chunk(chunk):
+            if (
+                _is_web_residue(sentence)
+                or _is_math_noise(sentence)
+                or _is_heading_like_fragment(sentence)
+                or sentence[0].islower()
+            ):
+                continue
+            units.append(
+                {
+                    "text": sentence,
+                    "section": section,
+                    "heading": heading,
+                    "lead": lead,
+                }
+            )
+            lead = False
+        buffer.clear()
+
+    for raw_line in _clean_raw_text(text).split("\n"):
+        line = _prepare_line(raw_line)
+        if not line:
+            flush()
+            continue
+        if _is_section_heading(line):
+            flush()
+            section += 1
+            heading = line
+            lead = True
+            continue
+        buffer.append(line)
+    flush()
+    return units
+
+
+def _unit_score(unit: dict, centrality: float) -> float:
+    text = unit["text"]
+    score = centrality
+    if unit["lead"]:
+        score += 0.12
+    score += max(0.0, _score_key_sentence(text)) * 0.08
+    if re.search(r"(?i)\b(se define como|consiste en|es la|es el|es un|es una)\b", text):
+        score += 0.22
+    # Hechos concretos (año, nombre propio): suelen ser el ejemplo que ancla el tema
+    # y el grafo los baja porque no se repiten.
+    if re.search(r"\b(?:1[5-9]\d{2}|20\d{2})\b", text):
+        score += 0.16
+    if re.search(
+        r"\b[A-ZÁÉÍÓÚÑÜ][a-záéíóúñü]{2,}\s+[A-ZÁÉÍÓÚÑÜ][a-záéíóúñü]{2,}\b",
+        text,
+    ):
+        score += 0.14
+    return score
+
+
+def _select_diverse(
+    units: list[dict],
+    limit: int,
+    exclude: list[str] | None = None,
+    *,
+    coverage: bool = False,
+) -> list[str]:
+    """Elige hasta `limit` frases, en orden del texto, sin repetir la idea.
+
+    Con cobertura, reserva un hueco al mejor hit de cada apartado de contenido
+    antes de rellenar con las frases más centrales del documento.
+    """
+    if limit <= 0 or not units:
+        return []
+
+    banned = [item for item in (exclude or []) if item]
+    ranks = _centrality([unit["text"] for unit in units])
+    scored = [(_unit_score(unit, ranks[i]), i) for i, unit in enumerate(units)]
+    best = max((score for score, _ in scored), default=1.0) or 1.0
+
+    def cleaned_of(index: int) -> str:
+        text = _compress_hit(units[index]["text"])
+        if len(text) < 12 or not _looks_complete_phrase(text):
+            return ""
+        return text
+
+    def richness(index: int) -> int:
+        return len(_content_token_list(units[index]["text"]))
+
+    chosen: list[int] = []
+
+    def try_add(index: int) -> None:
+        cleaned = cleaned_of(index)
+        if not cleaned or index in chosen:
+            return
+        if any(_too_similar(cleaned, other) for other in banned):
+            return
+        conflict = None
+        for kept in chosen:
+            other = cleaned_of(kept) or units[kept]["text"]
+            if not _too_similar(cleaned, other):
+                continue
+            if conflict is not None:
+                return
+            conflict = kept
+        if conflict is None:
+            if len(chosen) < limit:
+                chosen.append(index)
+            return
+        # Misma idea: quédate con la frase que aporta más contenido.
+        if richness(index) >= richness(conflict) + 3:
+            chosen[chosen.index(conflict)] = index
+
+    # Se recorre todo el ranking: una frase más baja puede sustituir a otra
+    # si dice lo mismo y aporta más contenido.
+    for _score, index in sorted(scored, key=lambda item: (-item[0], item[1])):
+        try_add(index)
+
+    if coverage and len(chosen) < limit:
+        by_section: dict[int, list[tuple[float, int]]] = {}
+        represented = {units[index]["section"] for index in chosen}
+        for score, index in scored:
+            heading = units[index]["heading"]
+            if heading and _GENERIC_HEADING.match(heading):
+                continue
+            if units[index]["section"] in represented:
+                continue
+            by_section.setdefault(units[index]["section"], []).append((score, index))
+        if len(by_section) >= 1:
+            for cands in by_section.values():
+                if len(chosen) >= limit:
+                    break
+                cands.sort(key=lambda item: (-item[0], item[1]))
+                for score, index in cands:
+                    if score < best * 0.52:
+                        break
+                    try_add(index)
+                    break
+
+    chosen.sort()
+    out: list[str] = []
+    for index in chosen:
+        cleaned = _compress_hit(units[index]["text"])
+        if cleaned:
+            out.append(cleaned)
+    return out[:limit]
 
 
 _FILLER_START = (
@@ -1059,9 +1443,11 @@ _VERBISH = re.compile(
     r"desaparece|desaparecen|cambia|cambian|crece|crecen|"
     r"transmite|transmiten|ayuda|ayudan|reconoce|reconocen|"
     r"prioriza|priorizan|genera|generan|renuncia|renuncian|"
+    r"clasifica|exige|incluye|confirma|empieza|"
     # Otras conjugaciones verbales típicas (evitar sustantivos cortos en -a/-o)
-    r"\w{5,}(?:ando|endo|ado|idos?|adas?|aba|[ií]an?|[oó]|i[oó]|"
-    r"ar[aá]|er[aá]|ir[aá]|ce|cen|za|zan|yen|nen)"
+    r"\w{4,}(?:ando|endo|ado|idos?|adas?|aba|[ií]an?|[oó]|i[oó]|"
+    r"ar[aá]|er[aá]|ir[aá]|ce|cen|za|zan|yen|nen|ifica|izan?|"
+    r"uye|uyen|ige|igen)"
     r")\b"
 )
 
@@ -1240,7 +1626,7 @@ _BUSINESS_MARKERS = {
         "deben realizar", "implementar", "revisar antes",
     ),
     "Riesgos y dudas": (
-        "riesgo de", "riesgo:", "riesgos", "bloqueo", "dependencia crítica",
+        "riesgo de", "riesgo:", "riesgo ", "riesgos", "bloqueo", "dependencia crítica",
         "dependencia critica", "amenaza", "incertidumbre sobre", "retraso previsto",
         "problema crítico", "problema critico", "pendiente de confirmar",
     ),
@@ -1298,25 +1684,26 @@ def _format_ficha_generic(text: str, *, length: str = LENGTH_MEDIUM) -> str:
         and not _is_math_noise(s)
         and not _is_heading_like_fragment(s)
     ]
+    units = [
+        unit
+        for unit in _iter_content_units(text)
+        if unit["text"].lower().rstrip(".") != title_key
+    ]
+    if not units and body:
+        units = [
+            {"text": sentence, "section": 0, "heading": "", "lead": i == 0}
+            for i, sentence in enumerate(body)
+        ]
 
     # En corto: solo título + resumen denso (3–5 hits totales).
     if caps["ideas_max"] <= 0 and caps["facts_max"] <= 0:
         exec_cap = min(caps["exec_max"], max(caps["exec_min"], min(5, len(body) or 1)))
-        ranked = sorted(
-            enumerate(body),
-            key=lambda t: (-_score_key_sentence(t[1]), t[0]),
-        )
-        pool = [s for _, s in ranked[: max(exec_cap + 3, 6)]]
-        # Preferir orden de aparición entre los mejor puntuados
-        top_set = {id(s) for s in pool}
-        ordered = [s for s in body if id(s) in top_set] or pool
-        executive = _pick_unique(ordered, exec_cap)
+        executive = _select_diverse(units, exec_cap, coverage=True)
         if len(executive) < min(2, caps["exec_min"]) and body:
             executive = _pick_unique(body, exec_cap)
 
         parts: list[str] = [
-            _section_heading("Título / tema"),
-            f"- {title}",
+            title,
             "",
             _section_heading("Resumen"),
         ]
@@ -1354,34 +1741,29 @@ def _format_ficha_generic(text: str, *, length: str = LENGTH_MEDIUM) -> str:
     )
     reserved = conclusions + decisions + actions + risks
 
-    # Resumen ejecutivo: hits densos en orden del texto
+    # Resumen: frases centrales del propio texto, una idea por apartado.
     exec_target = min(
         caps["exec_max"],
-        max(caps["exec_min"], min(caps["exec_max"], len(body) or 1)),
+        max(caps["exec_min"], min(caps["exec_max"], len(units) or 1)),
     )
-    exec_scored: list[tuple[float, int, str]] = []
-    for i, s in enumerate(body):
-        pos = max(0.0, 1.5 - i * 0.15)
-        pen = -2.0 if any(_overlap_ratio(s, c) >= 0.72 for c in reserved) else 0.0
-        exec_scored.append((_score_key_sentence(s) + pos + pen, i, s))
-    exec_scored.sort(key=lambda x: (-x[0], x[1]))
-    top_idx = sorted({t[1] for t in exec_scored[: max(exec_target + 2, 5)]})
-    exec_pool = [body[i] for i in top_idx if i < len(body)]
-    executive = _pick_unique(exec_pool, exec_target, exclude=reserved)
+    executive = _select_diverse(units, exec_target, exclude=reserved, coverage=True)
     if len(executive) < min(2, caps["exec_min"]):
         executive = _pick_unique(body, exec_target, exclude=reserved)
     if not executive and body:
         executive = _pick_unique(body, 1)
 
-    # Ideas clave sin duplicar otros bloques
-    ranked = sorted(body, key=_score_key_sentence, reverse=True)
-    idea_cap = min(caps["ideas_max"], max(1, len(body))) if caps["ideas_max"] else 0
+    idea_cap = min(caps["ideas_max"], max(1, len(units))) if caps["ideas_max"] else 0
     ideas = (
-        _pick_unique(ranked, idea_cap, exclude=executive + reserved)
+        _select_diverse(
+            units,
+            idea_cap,
+            exclude=executive + reserved,
+            coverage=False,
+        )
         if idea_cap
         else []
     )
-    if length == LENGTH_MEDIUM and len(body) <= 6 and ideas:
+    if length == LENGTH_MEDIUM and len(units) <= 6 and ideas:
         ideas = ideas[: min(4, len(ideas))]
 
     facts = _extract_definitions_and_facts(text, body) if caps["facts_max"] else []
@@ -1413,11 +1795,7 @@ def _format_ficha_generic(text: str, *, length: str = LENGTH_MEDIUM) -> str:
         else []
     )
 
-    parts = []
-
-    parts.append(_section_heading("Título / tema"))
-    parts.append(f"- {title}")
-    parts.append("")
+    parts = [title, ""]
 
     parts.append(_section_heading("Resumen"))
     if executive:
@@ -1937,8 +2315,8 @@ def _extract_all(
 
 
 def _section_heading(name: str) -> str:
-    """Título de sección en texto plano (sin # / ## de Markdown)."""
-    return f"── {name} ──"
+    """Nombre de sección solo, sin rayas ni almohadillas."""
+    return name.strip()
 
 
 def _bullet(label: str, value: str) -> str:
@@ -1953,6 +2331,13 @@ def _section_bullets(items: list[str]) -> list[str]:
 
 def _format_ficha_product(data: _Extracted) -> str:
     parts: list[str] = []
+
+    product_name = " ".join(
+        part for part in (data.marca.strip(), data.modelo.strip()) if part
+    )
+    if product_name:
+        parts.append(product_name)
+        parts.append("")
 
     parts.append(_section_heading("Identificación"))
     parts.append(_bullet("Marca", data.marca))

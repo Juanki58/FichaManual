@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import date
 from pathlib import Path
 
@@ -53,18 +54,59 @@ def save_summary_docx(
     meta_run.font.size = Pt(8.5)
     meta_run.font.color.rgb = RGBColor(100, 116, 139)
 
+    section_names = {
+        "Resumen",
+        "Ideas / conceptos clave",
+        "Datos, cifras, fechas o definiciones",
+        "Decisiones",
+        "Acciones propuestas o pendientes",
+        "Riesgos y dudas",
+        "Estructura / apartados",
+        "Conclusiones o implicaciones",
+        "Identificación",
+        "Especificaciones",
+        "Conexión / instalación",
+        "Programas",
+        "Uso diario",
+        "Mantenimiento",
+        "Códigos de error / averías",
+        "Advertencias importantes",
+        "Matriz Resumen de Indicadores",
+    }
+    started = False
+
+    def add_heading(label: str, *, size) -> None:
+        paragraph = document.add_paragraph(style="Heading 2")
+        paragraph.paragraph_format.keep_with_next = True
+        heading_run = paragraph.add_run(label)
+        heading_run.font.name = "Aptos Display"
+        heading_run.font.size = size
+        heading_run.font.color.rgb = RGBColor(31, 77, 58)
+
     for raw_line in text.splitlines():
         line = raw_line.strip()
         if not line:
             continue
         if line.startswith("──") and line.endswith("──"):
-            heading = line.strip("─ ")
-            paragraph = document.add_paragraph(style="Heading 2")
-            paragraph.paragraph_format.keep_with_next = True
-            heading_run = paragraph.add_run(heading)
-            heading_run.font.name = "Aptos Display"
-            heading_run.font.size = Pt(12.5)
-            heading_run.font.color.rgb = RGBColor(31, 77, 58)
+            line = line.strip("─ ").strip()
+            if not line:
+                continue
+        numbered = bool(
+            re.match(r"^\d+\.\s+\S", line) and len(line) <= 80 and not line.endswith(".")
+        )
+        if line in section_names or numbered:
+            add_heading(line, size=Pt(12.5))
+            started = True
+            continue
+        if not started:
+            paragraph = document.add_paragraph()
+            paragraph.paragraph_format.space_after = Pt(8)
+            title_run = paragraph.add_run(line)
+            title_run.bold = True
+            title_run.font.name = "Aptos Display"
+            title_run.font.size = Pt(16)
+            title_run.font.color.rgb = RGBColor(27, 55, 87)
+            started = True
             continue
         if line.startswith("- "):
             paragraph = document.add_paragraph(style="List Bullet")
@@ -76,6 +118,13 @@ def save_summary_docx(
                 paragraph.add_run(value)
             else:
                 paragraph.add_run(content)
+            continue
+        if ": " in line and len(line.split(":", 1)[0].split()) <= 8:
+            paragraph = document.add_paragraph()
+            label, value = line.split(": ", 1)
+            lead = paragraph.add_run(f"{label}: ")
+            lead.bold = True
+            paragraph.add_run(value)
             continue
         document.add_paragraph(line)
 
